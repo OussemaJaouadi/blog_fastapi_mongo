@@ -23,18 +23,17 @@ jobs:
           # Simulate test command
           echo "Tests passed."
 
-      - name: Create Pull Request
+      - name: Create PR if tests pass
         if: success()
-        uses: peter-evans/create-pull-request@v3
+        uses: actions/github-script@v6
         with:
-          title: "Automated Pull Request"
-          body: "This pull request is automatically created by GitHub Actions."
-          base: main
-          branch: ${{ github.head_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[create-pull-request] automated change"
-          committer: "GitHub <noreply@github.com>"
-          author: "OussemaJaouadi <OussemaJaouadi@users.noreply.github.com>"
-          signoff: false
-          delete-branch: false
-          draft: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.create({
+              owner: '${GITHUB_REPO_OWNER}',
+              repo: '${GITHUB_REPO_NAME}',
+              title: 'PR: Feature Branch ${GITHUB_REF}',
+              body: 'Automated PR from feature branch ${GITHUB_REF}',
+              labels: ['feature-branch'],
+              assignees: ['senior-developer']
+            })
