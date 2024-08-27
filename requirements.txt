@@ -1,0 +1,8 @@
+pydantic[email]
+fastapi
+uvicorn
+pymongo
+pydantic_settings
+passlib
+motor
+pyjwt

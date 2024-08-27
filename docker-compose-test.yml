@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:4
+    container_name: my-mongo-test
+    ports:
+      - "27017:27017"  # Use a different port to avoid conflicts with development
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+    volumes:
+      - mongo-data-test:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: my-mongo-express-test
+    ports:
+      - "8081:8081"  # Use a different port for testing
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASS}
+      ME_CONFIG_BASICAUTH_USERNAME: ${EXPRESS_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${EXPRESS_PASSWORD}
+
+  app:
+    image: oussemajaouadi/blog_fastapi_mongo:0.1.0
+    container_name: my-app-test
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - mongo-express
+    environment:
+      DB_URL: "mongodb://mongo:27017/"  # Adjust if needed
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      ALGORITHM: ${ALGORITHM}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+
+volumes:
+  mongo-data-test:
