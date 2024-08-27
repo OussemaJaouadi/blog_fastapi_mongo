@@ -34,5 +34,4 @@ jobs:
           gh pr create --title "PR: Feature Branch $BRANCH_NAME" \
             --body "Automated PR from feature branch $BRANCH_NAME" \
             --head $BRANCH_NAME --base main \
-            --repo ${{ github.repository }} \
-            --token $GITHUB_TOKEN
+            --repo ${{ github.repository }}
