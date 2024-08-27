@@ -1,4 +1,4 @@
-name: Feature Branch Workflow
+name: Create Pull Request
 
 on:
   push:
@@ -17,15 +17,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Dependencies
-        run: |
-          echo "Installing dependencies"
-          # Install any dependencies if needed
-
       - name: Run Tests
         run: |
           echo "This is a test"
-          # Simulate running tests; replace with actual test commands
+          # Simulate test command
+          echo "Tests passed."
 
       - name: Create Pull Request
         if: success()
@@ -35,3 +31,10 @@ jobs:
           body: "This pull request is automatically created by GitHub Actions."
           base: main
           branch: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "[create-pull-request] automated change"
+          committer: "GitHub <noreply@github.com>"
+          author: "OussemaJaouadi <OussemaJaouadi@users.noreply.github.com>"
+          signoff: false
+          delete-branch: false
+          draft: false
