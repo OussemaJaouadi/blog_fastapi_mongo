@@ -35,4 +35,4 @@ jobs:
           base: 'main'
           head: ${{ github.ref }}
           body: 'Automated pull request created by GitHub Actions'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
