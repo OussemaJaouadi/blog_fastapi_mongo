@@ -29,11 +29,15 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.issues.create({
-              owner: '${GITHUB_REPO_OWNER}',
-              repo: '${GITHUB_REPO_NAME}',
-              title: 'PR: Feature Branch ${GITHUB_REF}',
-              body: 'Automated PR from feature branch ${GITHUB_REF}',
-              labels: ['feature-branch'],
-              base: main
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = context.ref.replace('refs/heads/', '');
+            github.pulls.create({
+              owner,
+              repo,
+              title: `PR: Feature Branch ${branch}`,
+              head: branch,
+              base: 'main',
+              body: `Automated PR from feature branch ${branch}`,
+              labels: ['feature-branch']
             })
