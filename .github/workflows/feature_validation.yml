@@ -33,8 +33,8 @@ jobs:
             const repo = context.repo.repo;
             const branch = context.ref.replace('refs/heads/', '');
             github.pulls.create({
-              owner,
-              repo,
+              owner: owner,
+              repo: repo,
               title: `PR: Feature Branch ${branch}`,
               head: branch,
               base: 'main',
