@@ -23,21 +23,12 @@ jobs:
           # Simulate test command
           echo "Tests passed."
 
-      - name: Create PR if tests pass
-        if: success()
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const branch = context.ref.replace('refs/heads/', '');
-            github.pulls.create({
-              owner: owner,
-              repo: repo,
-              title: `PR: Feature Branch ${branch}`,
-              head: branch,
-              base: 'main',
-              body: `Automated PR from feature branch ${branch}`,
-              labels: ['feature-branch']
-            })
+      - name: Set up GitHub CLI
+        run: |
+          sudo apt-get install -y gh
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Create Pull Request
+        run: |
+          BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
+          gh pr create --title "PR: Feature Branch $BRANCH_NAME" --body "Automated PR from feature branch $BRANCH_NAME" --head $BRANCH_NAME --base main --label "feature-branch"
