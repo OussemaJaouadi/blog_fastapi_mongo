@@ -24,11 +24,14 @@ jobs:
           echo "Tests passed."
 
       - name: Set up GitHub CLI
-        run: |
-          sudo apt-get install -y gh
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+        run: sudo apt-get install -y gh
 
       - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
-          gh pr create --title "PR: Feature Branch $BRANCH_NAME" --body "Automated PR from feature branch $BRANCH_NAME" --head $BRANCH_NAME --base main --label "feature-branch"
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          gh pr create --title "PR: Feature Branch $BRANCH_NAME" \
+            --body "Automated PR from feature branch $BRANCH_NAME" \
+            --head $BRANCH_NAME --base main
