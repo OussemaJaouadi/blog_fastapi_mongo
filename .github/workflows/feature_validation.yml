@@ -35,5 +35,5 @@ jobs:
               title: 'PR: Feature Branch ${GITHUB_REF}',
               body: 'Automated PR from feature branch ${GITHUB_REF}',
               labels: ['feature-branch'],
-              assignees: ['senior-developer']
+              base: main
             })
