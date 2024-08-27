@@ -1,0 +1,38 @@
+name: Feature Branch Workflow
+
+on:
+  push:
+    branches:
+      - 'dev/**'
+
+jobs:
+  test-and-create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          echo "Installing dependencies"
+          # Install any dependencies if needed
+
+      - name: Run Tests
+        run: |
+          echo "This is a test"
+          # Simulate running tests; replace with actual test commands
+
+      - name: Create Pull Request
+        if: success()
+        uses: gh-actions/create-pull-request@v1
+        with:
+          title: 'Automated PR from ${{ github.ref }}'
+          base: 'main'
+          head: ${{ github.ref }}
+          body: 'Automated pull request created by GitHub Actions'
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,31 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Build Docker Image
+        run: |
+          COMMIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          docker build -t ${{ vars.DOCKER_HUB_USERNAME }}/$DOCKER_IMAGE_NAME:$COMMIT_SHA .
+          # Build Docker image with commit SHA tag
+
+      - name: Push Docker Image
+        run: |
+          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ vars.DOCKER_HUB_USERNAME }}" --password-stdin
+          COMMIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          docker push ${{ vars.DOCKER_HUB_USERNAME }}/$DOCKER_IMAGE_NAME:$COMMIT_SHA
+          # Push Docker image to Docker Hub with commit SHA tag
